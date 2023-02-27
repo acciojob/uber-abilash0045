@@ -83,32 +83,17 @@ public class CustomerServiceImpl implements CustomerService {
 		//Cancel the trip having given trip Id and update TripBooking attributes accordingly
 		TripBooking tripBooking = tripBookingRepository2.findById(tripId).get();
 		tripBooking.setStatus(TripStatus.CANCELED);
+		tripBooking.setBill(0);
 
 		Driver driver = tripBooking.getDriver();
 
 		Cab cab = driver.getCab();
 		cab.setAvailable(true);
+		cabRepository.save(cab);
 
-		List<TripBooking> driverTripBookingList = driver.getTripBookingList();
-		for (TripBooking tripBooking1 : driverTripBookingList){
-			if (tripBooking1.getTripBookingId() == tripBooking.getTripBookingId()){
-				tripBooking1.setStatus(TripStatus.CANCELED);
-			}
-		}
-		driver.setTripBookingList(driverTripBookingList);
-		driverRepository2.save(driver);
-
-		Customer customer = tripBooking.getCustomer();
+		tripBookingRepository2.save(tripBooking);
 
 
-		List<TripBooking> customerTripBookingList = customer.getTripBookingList();
-		for (TripBooking tripBooking1 : driverTripBookingList){
-			if (tripBooking1.getTripBookingId() == tripBooking.getTripBookingId()){
-				tripBooking1.setStatus(TripStatus.CANCELED);
-			}
-		}
-		customer.setTripBookingList(customerTripBookingList);
-		customerRepository2.save(customer);
 	}
 
 	@Override
@@ -118,30 +103,13 @@ public class CustomerServiceImpl implements CustomerService {
 		TripBooking tripBooking = tripBookingRepository2.findById(tripId).get();
 		tripBooking.setStatus(TripStatus.COMPLETED);
 
+		tripBookingRepository2.save(tripBooking);
+
 		Driver driver = tripBooking.getDriver();
 
 		Cab cab = driver.getCab();
 		cab.setAvailable(true);
+		cabRepository.save(cab);
 
-		List<TripBooking> driverTripBookingList = driver.getTripBookingList();
-		for (TripBooking tripBooking1 : driverTripBookingList){
-			if (tripBooking1.getTripBookingId() == tripBooking.getTripBookingId()){
-				tripBooking1.setStatus(TripStatus.COMPLETED);
-			}
-		}
-		driver.setTripBookingList(driverTripBookingList);
-		driverRepository2.save(driver);
-
-		Customer customer = tripBooking.getCustomer();
-
-
-		List<TripBooking> customerTripBookingList = customer.getTripBookingList();
-		for (TripBooking tripBooking1 : driverTripBookingList){
-			if (tripBooking1.getTripBookingId() == tripBooking.getTripBookingId()){
-				tripBooking1.setStatus(TripStatus.COMPLETED);
-			}
-		}
-		customer.setTripBookingList(customerTripBookingList);
-		customerRepository2.save(customer);
 	}
 }
